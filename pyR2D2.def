@@ -16,11 +16,11 @@ From: condaforge/miniforge3:latest
     mamba clean -a
     
     # apt install
-    apt -y update && apt -y install x11-apps git gfortran build-essential rsync
+    apt -y update && apt -y install x11-apps git gfortran build-essential rsync openssh-client
 
     # pyR2D2 installation
     mkdir -p /opt/source
     cd /opt/source
     git clone https://github.com/hottahd/pyR2D2.git
     cd pyR2D2
-    pip install .
+    pip install . --root-user-action
