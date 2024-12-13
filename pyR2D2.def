@@ -23,4 +23,4 @@ From: condaforge/miniforge3:latest
     cd /opt/source
     git clone https://github.com/hottahd/pyR2D2.git
     cd pyR2D2
-    pip install . --root-user-action
+    pip install . 
