@@ -1,2 +1,13 @@
 # Singularity file
 *.sif
+
+.bash_history
+.Xauthority
+
+.cache
+history.sqlite
+
+.local
+
+.jupyter/*
+!.jupyter/jupyter_notebook_config.py

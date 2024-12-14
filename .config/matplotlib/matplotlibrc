@@ -1,0 +1,7 @@
+axes.prop_cycle : cycler(color=['7b85d4', 'f37738', '83c995', 'd7369e', 'ad5d50', 'e9d943'])
+interactive : True
+font.size    : 18
+font.family  : Times New Roman
+image.cmap   : inferno
+mathtext.fontset  : stix
+lines.linewidth   : 1.5
