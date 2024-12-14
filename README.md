@@ -17,13 +17,13 @@
     ```
 3. コンテナの起動は以下の2通り
 
-    a. シェルを使う場合
+    1. シェルを使う場合
         ```shell
         ./pyR2D2.sh shell
         ```
         shell内部でipythonなどを使い、解析を進める。
-        
-    b. jupyter notebookを使う場合
+
+    2. jupyter notebookを使う場合
         ```shell
         ./pyR2D2.sh run
         ```
