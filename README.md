@@ -1,14 +1,14 @@
-# 研究の再現性確保のためのコンテナレシピ
+# Apptainer container recipe collection
 
-## はじめに
+## pyR2D2: 研究の再現性確保
 
 研究であるデータを解析したものの、数年後にオペレーティングシステムなどの変更により、解析の再現が困難になることがある。
 
-筆者は[pyR2D2](https://github.com/hottahd/pyR2D2)を解析に用いており、このバージョン管理を行いたい。
-
 そのような事態を避けるために、Apptainer (Singularity)を用いたコンテナを用意し、研究データと一緒に保存することにする。
 
-## 手順
+筆者は[pyR2D2](https://github.com/hottahd/pyR2D2)を解析に用いており、このバージョン管理を行いたい。
+
+### 手順
 
 主な手順は以下である。
 
@@ -35,11 +35,25 @@
 
 4. 研究をまとめて、論文が出版されたら当該ディレクトリをコピーし、`py_freeze`とし、以降変更できないようにする。
 
-## 考え方
+### 考え方
 
 1. 一論文、一コンテナ
 2. `.bashrc`, `matplotlibrc`などの設定ファイルはコンテナには含まず、このレポジトリに含む
 3. 研究進行中の`pyR2D2`や`pyR2D2.def`の変更は許される
+
+## conda_test 
+
+作成パッケージをテストするための環境
+
+```shell
+apptainer build --fakeroot conda_test.sif conda_test.def
+```
+
+テスト用ディレクトリ`/path/to/test`を用意し、そこをホームディレクトリとする。
+
+```shell
+apptainer shell --home /path/to/test conda_test.sif
+```
 
 ## 仮想化ソフトウェアのインストール
 
@@ -54,3 +68,16 @@ Singularity自体は開発が続けられているが、完全OSSのApptainerを
 ### Singularity
 
 [こちら](https://github.com/sylabs/singularity/blob/main/INSTALL.md)を参照
+
+### Mac
+
+limaを使う
+```
+brew install lima
+```
+
+apptainerのtemplate利用
+```
+limactl start template://apptainer
+limactl shell apptainer
+```
