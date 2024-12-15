@@ -3,20 +3,20 @@
 if [ $# = 0 ]; then
     echo "Usage: pyR2D2.sh [run|shell]"
     exit 1
-else
-    if [ $1 = "run" ]; then
-        arg1=run
-        arg2=
-    elif [ $1 = "shell" ]; then
-        arg1=
-    else
-        echo "Usage: pyR2D2.sh [run|shell]"
-    fi
+fi
+if [[ "$1" != "run" && "$1" != "shell" ]]; then
+    echo "Error: Invalid argument '$1'"
+    echo "Usage: pyR2D2.sh [run|shell]"
+    exit 1
 fi
 
 cwd=$(pwd -P)
 
-singularity run\
+# There is a warning when host and container have different XAUTHORITY environment variables
+# We define XAUTHORITY just to suppress warning.
+export XAUTHORITY=$cwd/.Xauthority
+
+apptainer $1 \
     -B /scr:/scr \
     -B ~/.ssh:$cwd/.ssh \
     -B ~/.Xauthority:$cwd/.Xauthority \
@@ -24,4 +24,3 @@ singularity run\
     --env DISPLAY=$DISPLAY \
     --home $cwd \
     pyR2D2.sif
-
