@@ -54,4 +54,3 @@ Singularity自体は開発が続けられているが、完全OSSのApptainerを
 ### Singularity
 
 [こちら](https://github.com/sylabs/singularity/blob/main/INSTALL.md)を参照
-
