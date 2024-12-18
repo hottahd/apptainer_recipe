@@ -51,7 +51,7 @@ fi
 
 # rsync
 echo "$(date): Starting backup from '$src' to '$dest'" >> "$log_file"
-if rsync -av --delete --exclude='*sif' "$src" "$dest"; then
+if rsync -av --delete --exclude='*sif' --exclude='*__pycache__*' --exclude='data/' "$src" "$dest"; then
     echo "$(date): Backup completed successfully to '$dest'" >> "$log_file"
 else
     echo "$(date): Backup failed to '$dest'" >> "$log_file"
