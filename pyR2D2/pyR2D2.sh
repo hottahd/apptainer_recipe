@@ -19,6 +19,7 @@ export XAUTHORITY=$cwd/.Xauthority
 apptainer $1 \
     -B /scr:/scr \
     -B ~/.ssh:$cwd/.ssh \
+    -B $HOME:$HOME \
     -B ~/.Xauthority:$cwd/.Xauthority \
     --env XAUTHORITY=$cwd/.Xauthority \
     --env DISPLAY=$DISPLAY \

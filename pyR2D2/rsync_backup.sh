@@ -23,6 +23,7 @@ else
     current_year=$(cat $year_file)
 fi
 
+echo ${project_name} ${current_year}
 cron_identifier="# BACKUP_PROJECT_CRON_${current_year}_${project_name}" # cronジョブ識別コメント
 
 dest="$base_dest/$current_year/$project_name"
@@ -50,7 +51,7 @@ fi
 
 # rsync
 echo "$(date): Starting backup from '$src' to '$dest'" >> "$log_file"
-if rsync -av --delete "$src" "$dest"; then
+if rsync -av --delete --exclude='*sif' "$src" "$dest"; then
     echo "$(date): Backup completed successfully to '$dest'" >> "$log_file"
 else
     echo "$(date): Backup failed to '$dest'" >> "$log_file"
@@ -62,6 +63,6 @@ if ! crontab -l 2>/dev/null | grep -q "$cron_identifier"; then
     echo "Setting up cron job for automatic backups every 6 hours."
 
     # cronジョブ内容を追加
-    cron_job="0 */6 * * * $PWD/$(basename "$0") >> /var/log/rsync_to_dropbox.log 2>&1 $cron_identifier"
+    cron_job="0 */6 * * * $PWD/$(basename "$0") > /tmp/rsync_backup_${current_year}_${project_name}.log 2>&1 $cron_identifier"
     (crontab -l 2>/dev/null || true; echo "$cron_job") | crontab -
 fi
