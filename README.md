@@ -5,8 +5,8 @@
 - [pyR2D2](pyR2D2/README.md): R2D2シミュレーションの解析環境`pyR2D2`に関するコンテナ(再現性確保)
 - [conda_test](conda_test/README.md): 自作pythonソフトウェアのインストールテスト環境
 - [pytorch](pytorch/README.md): `pytorch` + `pyR2D2`利用のためのコンテナ
-- [tensorflow](tensorflow): `tensorflow` + `pyR2D2`利用のためのコンテナ
-
+- [tensorflow](tensorflow/README.md): `tensorflow` + `pyR2D2`利用のためのコンテナ
+- [NVIDIA HPC SDK](nvidia_hpc_sdk/README.md): NVIDIA HPC SDK
 
 ## 仮想化ソフトウェアのインストール
 
