@@ -1,0 +1,19 @@
+Bootstrap: docker
+From: nvcr.io/nvidia/pytorch:24.02-py3
+
+%labels
+    Author Hideyuki Hotta
+    Version v0.1.0
+
+%post
+    export DEBIAN_FRONTEND=noninteractive
+
+    apt -y update
+    apt -y install xserver-xorg x11-xserver-utils x11-apps openssh-client gfortran python3-tk
+
+    # ----- Prompt setting (force singularity to use the custom prompt)
+    CUSTOM_ENV=/.singularity.d/env/99-zz_custom_env.sh
+    cat >$CUSTOM_ENV <<EOF
+#!/bin/bash
+PS1="\[\e[1;33m\](sing):\h:\[\e[0;36m\]\w# \[\e[m\]"
+EOF
