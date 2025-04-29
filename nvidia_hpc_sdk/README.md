@@ -12,3 +12,12 @@ apptainer build --fakeroot nvidia_hpc_sdk.sif nvidia_hpc_sdk.def
 ```shell
 bash nvidia_hpc_sdk.sh
 ```
+
+# Link
+
+シェルスクリプトはどこからでも実行できるようになっているので、パスの通っているところにおいて実行すると良い
+
+```shell
+mkdir $HOME/bin
+ln -s /path/to/nvidia_hpc_sdk.sh $HOME/bin/nvidia_hpc_sdk
+```
