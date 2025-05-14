@@ -7,7 +7,7 @@ From: nvcr.io/nvidia/nvhpc:25.3-devel-cuda_multi-ubuntu24.04
 
 %post
     apt update
-    apt install -y nlohmann-json3-dev
+    apt install -y nlohmann-json3-dev libyaml-cpp-dev
 
     # ----- Prompt setting (force singularity to use the custom prompt)
     CUSTOM_ENV=/.singularity.d/env/99-zz_custom_env.sh
