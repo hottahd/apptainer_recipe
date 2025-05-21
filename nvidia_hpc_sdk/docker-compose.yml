@@ -1,14 +1,17 @@
 services:
   hpc:
     image: hh-nvhpc:latest
-    runtime: nvidia
     environment:
       - NVIDIA_VISIBLE_DEVICES=all
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - capabilities: [gpu]
     user: "${UID}:${GID}"
     volumes:
       - "${HOME}:${HOME}"
       - "/scr:/scr"
     working_dir: "${HOME}"
-    stdin_open: true      # = -i
-    tty: true             # = -t
-    restart: "no"         # 同じく --rm の意味合い
+    stdin_open: true
+    tty: true
