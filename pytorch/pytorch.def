@@ -1,5 +1,5 @@
 Bootstrap: docker
-From: nvcr.io/nvidia/pytorch:24.02-py3
+From: nvcr.io/nvidia/pytorch:25.06-py3
 
 %labels
     Author Hideyuki Hotta
@@ -10,6 +10,9 @@ From: nvcr.io/nvidia/pytorch:24.02-py3
 
     apt -y update
     apt -y install xserver-xorg x11-xserver-utils x11-apps openssh-client gfortran python3-tk
+    git clone https://github.com/hottahd/pyR2D2.git
+    cd pyR2D2
+    pip install .
 
     # ----- Prompt setting (force singularity to use the custom prompt)
     CUSTOM_ENV=/.singularity.d/env/99-zz_custom_env.sh
