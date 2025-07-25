@@ -1,27 +1,18 @@
 #!/bin/bash
 
-if [ $# = 0 ]; then
-    echo "Usage: pytorch.sh [run|shell]"
-    exit 1
-fi
-if [[ "$1" != "run" && "$1" != "shell" ]]; then
-    echo "Error: Invalid argument '$1'"
-    echo "Usage: pytorch.sh [run|shell]"
-    exit 1
-fi
+SCRIPT_PATH="$(readlink -f "${BASH_SOURCE[0]}")"
+SCRIPT_DIR="$(cd "$(dirname "$SCRIPT_PATH")" && pwd)"
 
-cwd=$(pwd -P)
+SIF_FILE="$SCRIPT_DIR/pytorch.sif"
 
-# There is a warning when host and container have different XAUTHORITY environment variables
-# We define XAUTHORITY just to suppress warning.
-export XAUTHORITY=$cwd/.Xauthority
+export XAUTHORITY=$SCRIPT_DIR/.Xauthority
 
-apptainer $1 \
+apptainer shell \
     -B /scr:/scr \
-    -B ~/.ssh:$cwd/.ssh \
+    -B ~/.ssh:$SCRIPT_DIR/.ssh \
     -B $HOME:$HOME \
-    -B ~/.Xauthority:$cwd/.Xauthority \
-    --env XAUTHORITY=$cwd/.Xauthority \
+    -B ~/.Xauthority:$SCRIPT_DIR/.Xauthority \
+    --env XAUTHORITY=$SCRIPT_DIR/.Xauthority \
     --env DISPLAY=$DISPLAY \
-    --home $cwd \
-    pytorch.sif
+    --home $HOME \
+    "$SIF_FILE"
