@@ -1,5 +1,5 @@
 Bootstrap: docker
-From: tensorflow/tensorflow:latest-gpu-jupyter
+From: tensorflow/tensorflow
 
 %labels
    Author Hideyuki Hotta
@@ -9,7 +9,12 @@ From: tensorflow/tensorflow:latest-gpu-jupyter
     export DEBIAN_FRONTEND=noninteractive
 
     apt -y update
-    apt -y install xserver-xorg x11-xserver-utils x11-apps openssh-client gfortran python3-tk
+    apt -y install xserver-xorg x11-xserver-utils x11-apps openssh-client gfortran python3-tk git
+    pip install ipython matplotlib scipy
+    git clone https://github.com/hottahd/pyR2D2.git
+    cd pyR2D2
+    pip install .
+
 
     # ----- Prompt setting (force singularity to use the custom prompt)
     CUSTOM_ENV=/.singularity.d/env/99-zz_custom_env.sh
