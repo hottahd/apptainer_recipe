@@ -4,6 +4,8 @@
 
 # Instll
 
+MS fontをインストールするために`Dropbox/setting/fonts`を`./apptainer_recipe/tensorflow`にコピー
+
 ```shell
 apptainer build --fakeroot tensorflow.sif tensorflow.def
 ```

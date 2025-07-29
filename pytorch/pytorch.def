@@ -5,11 +5,18 @@ From: nvcr.io/nvidia/pytorch:25.06-py3
     Author Hideyuki Hotta
     Version v0.1.0
 
+%files
+    fonts/times.ttf /usr/share/fonts/truetype/msttcorefonts/times.ttf
+    fonts/Times_New_Roman.ttf /usr/share/fonts/truetype/msttcorefonts/Times_New_Roman.ttf
+
 %post
     export DEBIAN_FRONTEND=noninteractive
 
     apt -y update
+    # apt-get install -y fontconfig
+    # fc-cache -fv
     apt -y install xserver-xorg x11-xserver-utils x11-apps openssh-client gfortran python3-tk
+    pip install scikit-learn
     git clone https://github.com/hottahd/pyR2D2.git
     cd pyR2D2
     pip install .

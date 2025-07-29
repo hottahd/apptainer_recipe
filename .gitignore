@@ -16,3 +16,4 @@ history.sqlite
 .project_name
 
 a.out
+*.ttf

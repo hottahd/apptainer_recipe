@@ -4,6 +4,8 @@
 
 # Install
 
+MS fontをインストールするために`Dropbox/setting/fonts`を`./apptainer_recipe/pytorch`にコピー
+
 ```shell
 apptainer build --fakeroot pytorch.sif pytorch.def
 ```

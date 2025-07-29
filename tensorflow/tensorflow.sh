@@ -8,6 +8,7 @@ SIF_FILE="$SCRIPT_DIR/tensorflow.sif"
 export XAUTHORITY=$SCRIPT_DIR/.Xauthority
 
 apptainer shell \
+    --nv \
     -B /scr:/scr \
     -B ~/.ssh:$SCRIPT_DIR/.ssh \
     -B $HOME:$HOME \
