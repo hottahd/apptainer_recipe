@@ -17,6 +17,8 @@ Singularity自体は開発が続けられているが、完全OSSのApptainerを
 
 [こちら](https://github.com/apptainer/apptainer/blob/main/INSTALL.md)を参照
 
+Ubuntu 23.04からは、unpreviledge userへの権限制約が強くなったので、上記の最後まで注意深く読むこと
+
 ### Singularity
 
 [こちら](https://github.com/sylabs/singularity/blob/main/INSTALL.md)を参照
