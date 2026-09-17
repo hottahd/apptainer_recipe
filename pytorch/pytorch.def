@@ -26,6 +26,41 @@ From: nvcr.io/nvidia/pytorch:26.06-py3
     pip install /opt/source/pyR2D2
     rm -rf /opt/source/pyR2D2
 
+    # ★作図の既定をイメージに焼き込む★（2026-09-17）
+    #   原本は ★configuration/python/matplotlib/matplotlibrc★（非公開リポなので写しを置く）。
+    #   ☠★mpl-data/matplotlibrc は丸ごと置き換えてはいけない★☠ あれは ★全キーを含む雛形★ で、
+    #     欠けると import 時に KeyError: 'backend_fallback' で落ちる（2026-09-17 に踏んだ）。
+    #     → ★該当キーの行だけ書き換える★。
+    #   ここは「インストール既定」の層なので、
+    #   ・/scr を bind し忘れても 図が DejaVu Sans に落ちない
+    #   ・/scr を bind すれば ~/.config/matplotlib/matplotlibrc が ★上書きして勝つ★
+    python - <<'MPLEOF'
+import matplotlib, os, re
+want = {
+    "axes.prop_cycle": "cycler(color=['7b85d4', 'f37738', '83c995', 'd7369e', 'ad5d50', 'e9d943'])",
+    "interactive": "True",
+    "font.size": "18",
+    "font.family": "serif",
+    "font.serif": "Times New Roman, Liberation Serif, DejaVu Serif",
+    "image.cmap": "inferno",
+    "mathtext.fontset": "stix",
+    "lines.linewidth": "1.5",
+}
+p = os.path.join(os.path.dirname(matplotlib.__file__), "mpl-data", "matplotlibrc")
+out, seen = [], set()
+for line in open(p).read().splitlines():
+    m = re.match(r"^#?\s*([A-Za-z0-9_.]+)\s*:", line)
+    k = m.group(1) if m else None
+    if k in want and k not in seen:
+        out.append("%s: %s" % (k, want[k])); seen.add(k)
+    else:
+        out.append(line)
+out += ["%s: %s" % (k, v) for k, v in want.items() if k not in seen]
+open(p, "w").write("\n".join(out) + "\n")
+print("  matplotlibrc を書き換えた:", p, "(%d 項目)" % len(want))
+MPLEOF
+    python -c 'import matplotlib; print("  既定の字体:", matplotlib.rcParams["font.family"], matplotlib.rcParams["font.size"])'
+
     # ----- Prompt setting (force singularity to use the custom prompt)
     CUSTOM_ENV=/.singularity.d/env/99-zz_custom_env.sh
     cat >$CUSTOM_ENV <<EOF
