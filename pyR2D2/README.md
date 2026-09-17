@@ -47,7 +47,7 @@
 
 | | 旧（miniforge） | 新（uv） |
 |---|---|---|
-| ベース | `condaforge/miniforge3:latest` | `ubuntu:24.04` を **digest で固定** |
+| ベース | `condaforge/miniforge3:latest` | `ubuntu:latest` |
 | Python | conda が連れてくる版 | `uv python install 3.13` |
 | パッケージ | `mamba install`（版指定なし） | `uv pip install`（PyPI） |
 | pyR2D2 | `git clone` して `pip install .`（その日の master） | **git の tag から**（`@v0.3.0`） |
@@ -58,6 +58,12 @@
 
 `apptainer build` は `%test` を走らせるので、**焼くたびに全部 import できることを確かめてから**
 `.sif` ができる。
+
+**版は固定しない。** 焼くときは基本的にそのとき新しいものを使う
+（ベースも uv も PyPI のパッケージも）。再現性は「焼いた `.sif` をデータと一緒に残す」ことで
+担保しているので、レシピ側で刺す必要がない。何で焼けたかは `/opt/versions.txt` に残る。
+pyR2D2 だけは tag を書いてある（どの版で解析したかが論文の情報になるため）。
+新しい版が出たら、この1行を上げてから焼く。
 
 ## 考え方
 

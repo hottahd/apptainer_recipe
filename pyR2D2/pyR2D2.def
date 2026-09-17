@@ -2,14 +2,16 @@
 #   ★このファイルは「どう生まれたか」の記録★。残すのは焼いた pyR2D2.sif のほう。
 #   焼き方:  apptainer build --fakeroot pyR2D2.sif pyR2D2.def
 Bootstrap: docker
-# ★タグではなく digest で刺す★ — ubuntu:24.04 は動くが、この digest は動かない
-From: ubuntu@sha256:69cecf4bbf72d2d44a9eef1b71fb98c7fb973d78af11399deccef19beb008ad9
+# ★新しいものが出たら新しいもので焼く★（版は固定しない）
+#   再現性は「焼いた .sif を データと一緒に残す」ことで担保している。
+#   何で焼けたかは コンテナ内の /opt/versions.txt に残る。
+From: ubuntu:latest
 
 %labels
     Author   Hideyuki Hotta
     Version  v0.2.0
     Built    2026-09-17
-    Base     ubuntu:24.04 (digest 固定)
+    Base     ubuntu:latest（焼いた日のもの。中身は /opt/versions.txt）
     Python   3.13
     pyR2D2   v0.3.0
     Note     miniforge から uv に移した（画像が小さく、入れるのが速い）
@@ -36,9 +38,9 @@ From: ubuntu@sha256:69cecf4bbf72d2d44a9eef1b71fb98c7fb973d78af11399deccef19beb00
     fc-cache -f
     rm -rf /var/lib/apt/lists/*
 
-    # ---- uv（版を固定して入れる）----
+    # ---- uv（いちばん新しいもの）----
     export UV_INSTALL_DIR=/usr/local/bin
-    curl -LsSf https://astral.sh/uv/0.12.15/install.sh | sh
+    curl -LsSf https://astral.sh/uv/install.sh | sh
 
     # ---- Python と解析道具 ----
     #   ★venv は /opt/venv★（$HOME はホスト側を bind するので、家の中には置かない）
@@ -59,8 +61,13 @@ From: ubuntu@sha256:69cecf4bbf72d2d44a9eef1b71fb98c7fb973d78af11399deccef19beb00
     # ---- pyR2D2（★PyPI に無いので git の tag から★。C++ 拡張はここで建つ）----
     uv pip install "pyR2D2 @ git+https://github.com/hottahd/pyR2D2@v0.3.0"
 
-    # ---- 何が入ったかを画像の中に残す ----
-    uv pip freeze > /opt/versions.txt
+    # ---- ★何で焼けたかを画像の中に残す★（版を固定しない代わりに ここに書く）----
+    { echo "# built: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
+      echo "# base:  $(. /etc/os-release; echo "$PRETTY_NAME")"
+      echo "# uv:    $(uv --version)"
+      echo "# python: $(/opt/venv/bin/python -V)"
+    } > /opt/versions.txt
+    uv pip freeze >> /opt/versions.txt
     /opt/venv/bin/python - >> /opt/versions.txt <<'PY'
 import pyR2D2
 print("# pyR2D2 version:", getattr(pyR2D2, "__version__", "?"))
