@@ -16,6 +16,15 @@
     ```shell
     apptainer build --fakeroot pyR2D2.sif pyR2D2.def
     ```
+
+    > **`--fakeroot` が通らない場合**（`User not listed in /etc/subuid`）
+    > 一度だけ root で範囲を割り当てる。以降は上のコマンドがそのまま通る。
+    > ```shell
+    > sudo usermod --add-subuids 100000-165535 --add-subgids 100000-165535 $USER
+    > ```
+    > 割り当てずに済ませるなら `sudo apptainer build pyR2D2.sif pyR2D2.def`
+    > （できた `.sif` は root 所有になるので `sudo chown $USER:$(id -gn) pyR2D2.sif`）。
+    > boulder は 2026-09-17 時点で未割り当て。
 3. コンテナの起動は以下の2通り
 
     1. シェルを使う場合
@@ -33,6 +42,22 @@
     再現性の観点では、Jupyter Notebookが良いであろう。
 
 4. 研究をまとめて、論文が出版されたら当該ディレクトリをコピーし、`py***_freeze`とし、以降変更できないようにする。
+
+## 中身（2026-09-17 に miniforge から uv に移した）
+
+| | 旧（miniforge） | 新（uv） |
+|---|---|---|
+| ベース | `condaforge/miniforge3:latest` | `ubuntu:24.04` を **digest で固定** |
+| Python | conda が連れてくる版 | `uv python install 3.13` |
+| パッケージ | `mamba install`（版指定なし） | `uv pip install`（PyPI） |
+| pyR2D2 | `git clone` して `pip install .`（その日の master） | **git の tag から**（`@v0.3.0`） |
+| 入った版の記録 | 無し | コンテナ内の `/opt/versions.txt` |
+
+`matplotlib-base`→`matplotlib`、`pyqt`→`pyqt6`、`opencv`→`opencv-python-headless`
+と読み替えている。venv は `/opt/venv`（`$HOME` はホスト側を bind するので家の中には置かない）。
+
+`apptainer build` は `%test` を走らせるので、**焼くたびに全部 import できることを確かめてから**
+`.sif` ができる。
 
 ## 考え方
 
