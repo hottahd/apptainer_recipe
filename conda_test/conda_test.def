@@ -28,5 +28,9 @@ EOF
 
 %test
     set -eu
+    # ☠★%test は読み取り専用・HOME=/root で走る★☠（2026-09-17 に踏んだ）
+    #   matplotlib も sunpy も設定ディレクトリを作ろうとして落ちるので、/tmp へ逃がす
+    export HOME=/tmp MPLCONFIGDIR=/tmp/mpl SUNPY_CONFIGDIR=/tmp/sunpy \
+           XDG_CONFIG_HOME=/tmp XDG_CACHE_HOME=/tmp
     python -c "import sys; print('  ok: python', sys.version.split()[0])"
     gfortran --version | head -1

@@ -119,6 +119,10 @@ EOF
 %test
     # ★焼くたびに ここで確かめる★
     set -eu
+    # ☠★%test は読み取り専用・HOME=/root で走る★☠（2026-09-17 に踏んだ）
+    #   matplotlib も sunpy も設定ディレクトリを作ろうとして落ちるので、/tmp へ逃がす
+    export HOME=/tmp MPLCONFIGDIR=/tmp/mpl SUNPY_CONFIGDIR=/tmp/sunpy \
+           XDG_CONFIG_HOME=/tmp XDG_CACHE_HOME=/tmp
     oidc-agent --version
     command -v jwt-agent
     command -v hpcissh                       # hpcissh-clients が置く名前（script/ で確認）

@@ -90,6 +90,10 @@ EOF
 %test
     # ★焼くたびに ここで確かめる★（apptainer build は既定で %test を走らせる）
     set -eu
+    # ☠★%test は読み取り専用・HOME=/root で走る★☠（2026-09-17 に踏んだ）
+    #   matplotlib も sunpy も設定ディレクトリを作ろうとして落ちるので、/tmp へ逃がす
+    export HOME=/tmp MPLCONFIGDIR=/tmp/mpl SUNPY_CONFIGDIR=/tmp/sunpy \
+           XDG_CONFIG_HOME=/tmp XDG_CACHE_HOME=/tmp
     /opt/venv/bin/python - <<'PY'
 import matplotlib; matplotlib.use("Agg")
 import numpy, scipy, matplotlib.pyplot, astropy, sunpy, cartopy, cv2, zarr, gspread, IPython

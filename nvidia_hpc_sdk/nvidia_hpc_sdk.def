@@ -25,6 +25,10 @@ EOF
 %test
     # ★焼くたびに ここで確かめる★ コンパイラと入れたヘッダが揃っているか
     set -eu
+    # ☠★%test は読み取り専用・HOME=/root で走る★☠（2026-09-17 に踏んだ）
+    #   matplotlib も sunpy も設定ディレクトリを作ろうとして落ちるので、/tmp へ逃がす
+    export HOME=/tmp MPLCONFIGDIR=/tmp/mpl SUNPY_CONFIGDIR=/tmp/sunpy \
+           XDG_CONFIG_HOME=/tmp XDG_CACHE_HOME=/tmp
     nvc++ --version | head -1
     nvfortran --version | head -1
     test -e /usr/include/nlohmann/json.hpp
