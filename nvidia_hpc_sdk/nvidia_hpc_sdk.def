@@ -29,8 +29,12 @@ EOF
     #   matplotlib も sunpy も設定ディレクトリを作ろうとして落ちるので、/tmp へ逃がす
     export HOME=/tmp MPLCONFIGDIR=/tmp/mpl SUNPY_CONFIGDIR=/tmp/sunpy \
            XDG_CONFIG_HOME=/tmp XDG_CACHE_HOME=/tmp
-    nvc++ --version | head -1
-    nvfortran --version | head -1
+    # ★nvfortran/nvc++ は1行目が空行★ なので2行目を出す
+    nvc++     --version | sed -n 2p
+    nvfortran --version | sed -n 2p
+    # ☠★GPU の確認は %test ではできない☠★ — build は --nv 無しで走るため。
+    #   焼いたあと ★apptainer exec --nv <sif> nvaccelinfo★ で
+    #   Default Target が期待の cc（astana の 4090 なら cc89）か見ること
     test -e /usr/include/nlohmann/json.hpp
     test -e /usr/include/yaml-cpp/yaml.h
     echo "  ok: HPC SDK とヘッダが揃っている"
