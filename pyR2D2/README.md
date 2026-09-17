@@ -50,7 +50,7 @@
 | ベース | `condaforge/miniforge3:latest` | `ubuntu:latest` |
 | Python | conda が連れてくる版 | `uv python install 3.13` |
 | パッケージ | `mamba install`（版指定なし） | `uv pip install`（PyPI） |
-| pyR2D2 | `git clone` して `pip install .`（その日の master） | **git の tag から**（`@v0.3.0`） |
+| pyR2D2 | `git clone` して `pip install .`（その日の master） | git の master から（**commit が記録される**） |
 | 入った版の記録 | 無し | コンテナ内の `/opt/versions.txt` |
 
 `matplotlib-base`→`matplotlib`、`pyqt`→`pyqt6`、`opencv`→`opencv-python-headless`
@@ -62,8 +62,15 @@
 **版は固定しない。** 焼くときは基本的にそのとき新しいものを使う
 （ベースも uv も PyPI のパッケージも）。再現性は「焼いた `.sif` をデータと一緒に残す」ことで
 担保しているので、レシピ側で刺す必要がない。何で焼けたかは `/opt/versions.txt` に残る。
-pyR2D2 だけは tag を書いてある（どの版で解析したかが論文の情報になるため）。
-新しい版が出たら、この1行を上げてから焼く。
+pyR2D2 も master 追随でよい。`uv pip freeze` は git から入れたものを
+**解決した commit ごと**書くので、`/opt/versions.txt` を見れば
+
+```
+pyr2d2 @ git+https://github.com/hottahd/pyR2D2@ec3e8946f7b25a03ad135c5ad2fd5cef2560b23d
+```
+
+とどの commit で焼いたかが分かる。コンテナの中で `pyR2D2.__version__` を見てもよい
+（`setuptools_scm` なので、tag の間なら `0.3.1.dev5+g…` の形で commit が付く）。
 
 ## 考え方
 

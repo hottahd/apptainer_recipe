@@ -13,7 +13,7 @@ From: ubuntu:latest
     Built    2026-09-17
     Base     ubuntu:latest（焼いた日のもの。中身は /opt/versions.txt）
     Python   3.13
-    pyR2D2   v0.3.0
+    pyR2D2   master（焼いた日のもの。commit は /opt/versions.txt）
     Note     miniforge から uv に移した（画像が小さく、入れるのが速い）
 
 %post
@@ -58,8 +58,11 @@ From: ubuntu:latest
         astropy sunpy cartopy opencv-python-headless zarr \
         gspread oauth2client
 
-    # ---- pyR2D2（★PyPI に無いので git の tag から★。C++ 拡張はここで建つ）----
-    uv pip install "pyR2D2 @ git+https://github.com/hottahd/pyR2D2@v0.3.0"
+    # ---- pyR2D2（★PyPI に無いので git から★。C++ 拡張はここで建つ）----
+    #   ★master 追随★ — 版を刺さなくても、どの commit で焼けたかは
+    #   /opt/versions.txt の pip freeze に ★commit ごと★ 残る（uv がそう書く）。
+    #   コンテナの中で pyR2D2.__version__ を見ても分かる（setuptools_scm）。
+    uv pip install "pyR2D2 @ git+https://github.com/hottahd/pyR2D2@master"
 
     # ---- ★何で焼けたかを画像の中に残す★（版を固定しない代わりに ここに書く）----
     { echo "# built: $(date -u +%Y-%m-%dT%H:%M:%SZ)"
