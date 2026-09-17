@@ -6,6 +6,7 @@ From: almalinux:8
     Version v0.1.0
 
 %post
+    set -eu
     REPO1="--enablerepo powertools"
 
     # prequisite
@@ -47,6 +48,10 @@ From: almalinux:8
     make
     make install_lib
     make install
+    # ★この Debian 風のパスで合っている★（2026-09-17 に Makefile を確認して裏を取った）
+    #   oidc-agent の Makefile は linux 分岐で LIB_PATH ?= /usr/lib/x86_64-linux-gnu を
+    #   ★ディストリに関係なく★ 使う。AlmaLinux でもそこに入るので、
+    #   /usr/lib64 に直してはいけない。☠直すと liboidc-agent が見つからなくなる☠
     cat <<EOF | tee /etc/ld.so.conf.d/oidc-agent.conf
 /usr/lib/x86_64-linux-gnu
 EOF
@@ -110,3 +115,12 @@ EOF
 #!/bin/bash
 PS1="\[\e[1;33m\](sing):\h:\[\e[0;36m\]\w# \[\e[m\]"
 EOF
+
+%test
+    # ★焼くたびに ここで確かめる★
+    set -eu
+    oidc-agent --version
+    command -v jwt-agent
+    command -v hpcissh                       # hpcissh-clients が置く名前（script/ で確認）
+    ldconfig -p | grep -q oidc-agent && echo "  liboidc-agent: ★見つかる★"
+    /opt/conda/bin/python -c "import numpy, matplotlib, pyR2D2; print('  ok: pyR2D2', getattr(pyR2D2,'__version__','?'))"

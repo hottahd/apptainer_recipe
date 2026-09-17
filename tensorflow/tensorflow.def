@@ -5,22 +5,28 @@ From: tensorflow/tensorflow:latest-gpu
    Author Hideyuki Hotta
    Version v0.1.0
 
-%files
-    fonts/times.ttf /usr/share/fonts/truetype/msttcorefonts/times.ttf
-    fonts/Times_New_Roman.ttf /usr/share/fonts/truetype/msttcorefonts/Times_New_Roman.ttf
-
 %post
+    set -eu
     export DEBIAN_FRONTEND=noninteractive
 
-    apt -y update
-    apt-get install -y fontconfig
-    fc-cache -fv
-    apt -y install xserver-xorg x11-xserver-utils x11-apps openssh-client gfortran python3-tk git
+    apt-get -y update
+    apt-get -y install --no-install-recommends \
+        xserver-xorg x11-xserver-utils x11-apps openssh-client \
+        gfortran python3-tk git fontconfig fonts-liberation
+    # ★字体★ fonts-liberation は main にあり、EULA も multiverse も要らない。
+    #   configuration の matplotlibrc は font.family: serif ／
+    #   font.serif: Times New Roman, Liberation Serif, ... なので、
+    #   ★Liberation Serif が入っていれば Times 相当になる★。
+    #   本物の Times が要るなら ttf-mscorefonts-installer を足す（multiverse・EULA あり）。
+    fc-cache -f
+    rm -rf /var/lib/apt/lists/*
 
     pip install ipython matplotlib scipy scikit-learn
-    git clone https://github.com/hottahd/pyR2D2.git
-    cd pyR2D2
-    pip install .
+
+    # pyR2D2（★画像の python をそのまま使う★）
+    git clone https://github.com/hottahd/pyR2D2.git /opt/source/pyR2D2
+    pip install /opt/source/pyR2D2
+    rm -rf /opt/source/pyR2D2
 
 
     # ----- Prompt setting (force singularity to use the custom prompt)
@@ -29,3 +35,13 @@ From: tensorflow/tensorflow:latest-gpu
 #!/bin/bash
 PS1="\[\e[1;33m\](app):\h:\[\e[0;36m\]\w# \[\e[m\]"
 EOF
+
+%test
+    set -eu
+    python - <<'PY'
+import matplotlib; matplotlib.use("Agg")
+from matplotlib.font_manager import findfont, FontProperties
+import tensorflow as tf, pyR2D2
+print("  ok: tensorflow", tf.__version__, "／ pyR2D2", getattr(pyR2D2, "__version__", "?"),
+      "／ 字体", findfont(FontProperties(family="serif")).split("/")[-1])
+PY
